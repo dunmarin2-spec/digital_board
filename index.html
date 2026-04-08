@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>S.O.S 전광판</title>
+    <link rel="manifest" href="manifest.json">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #000;
+            color: #fff;
+            font-family: 'Apple SD Gothic Neo', sans-serif;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+
+        /* 설정 화면 */
+        #setup {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            justify-content: center;
+            height: 100%;
+        }
+
+        h1 { font-size: 1.5rem; text-align: center; color: #ffeb3b; }
+        input, select {
+            padding: 15px;
+            border-radius: 10px;
+            border: none;
+            font-size: 1rem;
+        }
+
+        button {
+            padding: 15px;
+            border-radius: 10px;
+            border: none;
+            background: #4682FB;
+            color: white;
+            font-weight: bold;
+            font-size: 1.1rem;
+            cursor: pointer;
+        }
+
+        /* 전광판 화면 */
+        #display-screen {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: #000;
+            z-index: 1000;
+            cursor: pointer;
+            align-items: center;
+            white-space: nowrap;
+        }
+
+        #scrolling-text {
+            font-size: 25vh; /* 화면의 1/4 크기 */
+            font-weight: 900;
+            color: #ff0000;
+            text-shadow: 0 0 20px #ff0000;
+            animation: scroll-left linear infinite;
+        }
+
+        @keyframes scroll-left {
+            from { transform: translateX(100%); }
+            to { transform: translateX(-100%); }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="setup">
+        <h1>🚨 긴급 탈출 메시지 🚨</h1>
+        <input type="text" id="customText" placeholder="여기에 탈출 메시지 입력">
+        <select id="preset">
+            <option value="">-- 빠른 선택 --</option>
+            <option value="급똥 신호 옴. 붙잡으면 대참사 발생!!">급똥 신호</option>
+            <option value="집에 가스레인지 켜놓고 옴. 제발 보내줘!">가스레인지</option>
+            <option value="부장님 긴급 호출! 사무실 복귀해야 함!">부장님 호출</option>
+            <option value="우리 집 강아지가 탈출했대요! 빨리 가야 함!">강아지 탈출</option>
+        </select>
+        <button onclick="startScroll()">전광판 가동</button>
+        <p style="font-size: 0.8rem; color: #666; text-align: center;">화면을 클릭하면 설정으로 돌아옵니다.</p>
+    </div>
+
+    <div id="display-screen" onclick="stopScroll()">
+        <div id="scrolling-text">메시지 내용</div>
+    </div>
+
+    <script>
+        function startScroll() {
+            const customText = document.getElementById('customText').value;
+            const presetText = document.getElementById('preset').value;
+            const textElement = document.getElementById('scrolling-text');
+            const screen = document.getElementById('display-screen');
+
+            const finalText = customText || presetText || "도와주세요! 탈출이 필요합니다!";
+            textElement.innerText = finalText;
+
+            // 글자 길이에 따라 애니메이션 속도 조절 (글자당 약 0.5초)
+            const duration = finalText.length * 0.5 + 3;
+            textElement.style.animationDuration = duration + "s";
+
+            screen.style.display = 'flex';
+            // 전체화면 요청 (지원하는 브라우저만)
+            if (document.documentElement.requestFullscreen) {
+                document.documentElement.requestFullscreen();
+            }
+        }
+
+        function stopScroll() {
+            document.getElementById('display-screen').style.display = 'none';
+            if (document.exitFullscreen) {
+                document.exitFullscreen();
+            }
+        }
+        
+        // PWA 서비스 워커 등록
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js');
+        }
+    </script>
+</body>
+</html>
