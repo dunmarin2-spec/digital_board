@@ -3,21 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>S.O.S 정산 전광판</title>
+    <title>SOS 전광판</title>
+    <link rel="manifest" href="manifest.json">
     <style>
-        body { margin: 0; background: #000; color: #fff; font-family: sans-serif; overflow: hidden; }
-        #setup { padding: 20px; display: flex; flex-direction: column; gap: 15px; height: 100vh; justify-content: center; }
-        h1 { color: #ffeb3b; text-align: center; margin-bottom: 20px; }
+        body { margin: 0; background: #000; color: #fff; font-family: sans-serif; overflow: hidden; display: flex; flex-direction: column; height: 100vh; }
+        #setup { padding: 20px; display: flex; flex-direction: column; gap: 15px; justify-content: center; height: 100%; }
+        h1 { font-size: 1.5rem; text-align: center; color: #ffeb3b; }
         input, select, button { padding: 15px; border-radius: 10px; border: none; font-size: 1rem; }
         button { background: #4682FB; color: white; font-weight: bold; cursor: pointer; }
         
-        /* 전광판 */
-        #display-screen { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #000; z-index: 1000; flex-direction: column; justify-content: center; }
-        #scrolling-text { font-size: 20vh; font-weight: 900; color: #ff0000; white-space: nowrap; animation: scroll-left linear infinite; }
+        #display-screen { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #000; z-index: 1000; align-items: center; white-space: nowrap; }
+        #scrolling-text { font-size: 25vh; font-weight: 900; color: #ff0000; text-shadow: 0 0 20px #ff0000; animation: scroll-left linear infinite; }
         
-        /* 하단 배너 영역 */
-        #banner-area { position: absolute; bottom: 30px; width: 100%; display: flex; justify-content: center; gap: 20px; z-index: 1001; }
-        .banner-btn { padding: 15px 25px; border-radius: 50px; font-weight: bold; font-size: 1rem; cursor: pointer; text-decoration: none; display: flex; align-items: center; }
+        #banner-area { position: absolute; bottom: 30px; width: 100%; display: flex; justify-content: center; gap: 15px; z-index: 1001; }
+        .btn { padding: 12px 20px; border-radius: 50px; font-weight: bold; text-decoration: none; font-size: 0.9rem; }
         .kakao { background: #fee500; color: #3c1e1e; }
         .coupang { background: #0073e9; color: #fff; }
 
@@ -25,48 +24,35 @@
     </style>
 </head>
 <body>
-
-<div id="setup">
-    <h1>🚨 탈출 & 정산 시스템 🚨</h1>
-    <input type="text" id="customText" placeholder="탈출 메시지 (예: 급똥!! 먼저 감!)">
-    <select id="preset">
-        <option value="급똥 신호 옴! 붙잡으면 대참사 발생!!">급똥 신호</option>
-        <option value="집에 가스레인지 켜놓고 옴! 제발 보내줘!">가스레인지</option>
-        <option value="부장님 긴급 호출! 사무실 복귀해야 함!">부장님 호출</option>
-    </select>
-    <button onclick="startScroll()">전광판 가동 (수익모드)</button>
-    <p style="color: #666; font-size: 0.8rem; text-align: center;">전광판 클릭 시 설정으로 복귀</p>
-</div>
-
-<div id="display-screen" onclick="stopScroll()">
-    <div id="scrolling-text">메시지 내용</div>
-    <div id="banner-area">
-        <a href="https://qr.kakaopay.com/FRK8J0SAD" target="_blank" class="banner-btn kakao" onclick="event.stopPropagation();">
-            🟡 개발자에게 커피 후원하기
-        </a>
-        <a href="https://link.coupang.com/a/AF4757238" target="_blank" class="banner-btn coupang" onclick="event.stopPropagation();">
-            🔵 쿠팡 검색
-        </a>
+    <div id="setup">
+        <h1>🚨 긴급 탈출 전광판 🚨</h1>
+        <input type="text" id="customText" placeholder="직접 입력 (예: 급똥 먼저감!)">
+        <select id="preset">
+            <option value="급똥 신호 옴! 붙잡으면 대참사 발생!!">급똥 신호</option>
+            <option value="집에 가스레인지 켜놓고 옴! 제발 보내줘!">가스레인지</option>
+            <option value="부장님 긴급 호출! 사무실 복귀해야 함!">부장님 호출</option>
+        </select>
+        <button onclick="startScroll()">전광판 가동</button>
     </div>
-</div>
 
-<script>
-    function startScroll() {
-        const customText = document.getElementById('customText').value;
-        const presetText = document.getElementById('preset').value;
-        const textElement = document.getElementById('scrolling-text');
-        const finalText = customText || presetText;
+    <div id="display-screen" onclick="stopScroll()">
+        <div id="scrolling-text"></div>
+        <div id="banner-area">
+            <a href="https://qr.kakaopay.com/FRK8J0SAD" class="btn kakao" onclick="event.stopPropagation()">🟡 페이정산</a>
+            <a href="https://link.coupang.com/a/AF4757238" class="btn coupang" onclick="event.stopPropagation()">🔵 쿠팡검색</a>
+        </div>
+    </div>
 
-        textElement.innerText = finalText;
-        // 속도 조절
-        textElement.style.animationDuration = (finalText.length * 0.5 + 4) + "s";
-        document.getElementById('display-screen').style.display = 'flex';
-    }
-
-    function stopScroll() {
-        document.getElementById('display-screen').style.display = 'none';
-    }
-</script>
-
+    <script>
+        function startScroll() {
+            const txt = document.getElementById('customText').value || document.getElementById('preset').value;
+            const el = document.getElementById('scrolling-text');
+            el.innerText = txt;
+            el.style.animationDuration = (txt.length * 0.5 + 3) + "s";
+            document.getElementById('display-screen').style.display = 'flex';
+        }
+        function stopScroll() { document.getElementById('display-screen').style.display = 'none'; }
+        if ('serviceWorker' in navigator) { navigator.serviceWorker.register('sw.js'); }
+    </script>
 </body>
 </html>
