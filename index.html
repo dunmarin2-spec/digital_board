@@ -7,19 +7,23 @@
     <link rel="manifest" href="manifest.json">
     <style>
         body { margin: 0; background: #000; color: #fff; font-family: sans-serif; overflow: hidden; display: flex; flex-direction: column; height: 100vh; }
-        #setup { padding: 20px; display: flex; flex-direction: column; gap: 15px; justify-content: center; height: 100%; }
-        h1 { font-size: 1.5rem; text-align: center; color: #ffeb3b; }
-        input, select, button { padding: 15px; border-radius: 10px; border: none; font-size: 1rem; }
-        button { background: #4682FB; color: white; font-weight: bold; cursor: pointer; }
         
-        #display-screen { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #000; z-index: 1000; align-items: center; white-space: nowrap; }
-        #scrolling-text { font-size: 25vh; font-weight: 900; color: #ff0000; text-shadow: 0 0 20px #ff0000; animation: scroll-left linear infinite; }
+        /* 설정 화면 */
+        #setup { padding: 20px; display: flex; flex-direction: column; gap: 15px; justify-content: center; height: 100%; box-sizing: border-box; }
+        h1 { font-size: 1.5rem; text-align: center; color: #ffeb3b; margin-bottom: 5px; }
+        input, select, button { padding: 15px; border-radius: 10px; border: none; font-size: 1rem; width: 100%; box-sizing: border-box; }
+        button { background: #4682FB; color: white; font-weight: bold; cursor: pointer; margin-top: 5px; }
         
-        #banner-area { position: absolute; bottom: 30px; width: 100%; display: flex; justify-content: center; gap: 15px; z-index: 1001; }
-        .btn { padding: 12px 20px; border-radius: 50px; font-weight: bold; text-decoration: none; font-size: 0.9rem; }
+        /* 수익 버튼 영역 (설정 화면 하단) */
+        #profit-area { display: flex; gap: 10px; margin-top: 10px; }
+        .btn { flex: 1; padding: 15px; border-radius: 10px; font-weight: bold; text-decoration: none; font-size: 0.9rem; text-align: center; display: flex; align-items: center; justify-content: center; }
         .kakao { background: #fee500; color: #3c1e1e; }
         .coupang { background: #0073e9; color: #fff; }
 
+        /* 전광판 화면 (오직 글자만!) */
+        #display-screen { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #000; z-index: 1000; align-items: center; white-space: nowrap; }
+        #scrolling-text { font-size: 28vh; font-weight: 900; color: #ff0000; text-shadow: 0 0 20px #ff0000; animation: scroll-left linear infinite; }
+        
         @keyframes scroll-left { from { transform: translateX(100%); } to { transform: translateX(-100%); } }
     </style>
 </head>
@@ -33,14 +37,16 @@
             <option value="부장님 긴급 호출! 사무실 복귀해야 함!">부장님 호출</option>
         </select>
         <button onclick="startScroll()">전광판 가동</button>
+
+        <div id="profit-area">
+            <a href="https://qr.kakaopay.com/FRK8J0SAD" class="btn kakao">🟡 개발자에게 커피 후원하기</a>
+            <a href="https://link.coupang.com/a/AF4757238" class="btn coupang">🔵 쿠팡검색</a>
+        </div>
+        <p style="font-size: 0.7rem; color: #555; text-align: center; margin-top: 5px;">전광판 실행 중 화면을 누르면 이 화면으로 돌아옵니다.</p>
     </div>
 
     <div id="display-screen" onclick="stopScroll()">
         <div id="scrolling-text"></div>
-        <div id="banner-area">
-            <a href="https://qr.kakaopay.com/FRK8J0SAD" class="btn kakao" onclick="event.stopPropagation()">🟡 페이정산</a>
-            <a href="https://link.coupang.com/a/AF4757238" class="btn coupang" onclick="event.stopPropagation()">🔵 쿠팡검색</a>
-        </div>
     </div>
 
     <script>
@@ -48,11 +54,25 @@
             const txt = document.getElementById('customText').value || document.getElementById('preset').value;
             const el = document.getElementById('scrolling-text');
             el.innerText = txt;
-            el.style.animationDuration = (txt.length * 0.5 + 3) + "s";
+            // 글자 길이에 비례해서 속도 조절
+            el.style.animationDuration = (txt.length * 0.6 + 2) + "s";
             document.getElementById('display-screen').style.display = 'flex';
+            
+            if (document.documentElement.requestFullscreen) {
+                document.documentElement.requestFullscreen();
+            }
         }
-        function stopScroll() { document.getElementById('display-screen').style.display = 'none'; }
-        if ('serviceWorker' in navigator) { navigator.serviceWorker.register('sw.js'); }
+        
+        function stopScroll() { 
+            document.getElementById('display-screen').style.display = 'none'; 
+            if (document.exitFullscreen) {
+                document.exitFullscreen();
+            }
+        }
+        
+        if ('serviceWorker' in navigator) { 
+            navigator.serviceWorker.register('sw.js'); 
+        }
     </script>
 </body>
 </html>
