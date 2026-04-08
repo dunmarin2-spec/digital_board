@@ -1,0 +1,15 @@
+{
+  "name": "S.O.S 전광판",
+  "short_name": "SOS전광판",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#000000",
+  "icons": [
+    {
+      "src": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIiB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiI+PHJlY3Qgd2lkdGg9Ijg4JSIgaGVpZ2h0PSI4OCUiIHg9IjYlIiB5PSI2JSIgZmlsbD0iIzAwMCIgcmg9IjUwIiAvPjx0ZXh0IHg9IjI1NiIgeT0iMzAwIiBmaWxsPSIjZmYwMDAwIiBmb250LXNpemU9IjE1MCIgZm9udC1mYW1pbHk9InNhbnMtc2VyaWYiIGZvbnQtd2VpZ2h0PSJib2xkIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5TT1M8L3RleHQ+PC9zdmc+",
+      "sizes": "512x512",
+      "type": "image/svg+xml"
+    }
+  ]
+}
